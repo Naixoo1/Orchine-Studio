@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "npm: dev",
+      "command": "npm.cmd run dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "shell",
+      "label": "npm: build",
+      "command": "npm.cmd run build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "npm: lint",
+      "command": "npm.cmd run lint",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "npm: test",
+      "command": "npm.cmd run test",
+      "problemMatcher": []
+    }
+  ]
+}

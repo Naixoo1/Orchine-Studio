@@ -1,0 +1,3 @@
+@echo off
+echo Starting Orchine Studio development server...
+call npm.cmd run dev %*
