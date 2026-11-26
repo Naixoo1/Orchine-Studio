@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StudioHeader } from '@/components/layout/StudioHeader';
+import { TransparentOrchelliaVideo } from '@/components/orchellia/TransparentOrchelliaVideo';
 import { ArrowRight } from 'lucide-react';
 
 export default function LobbyPage() {
@@ -65,7 +66,7 @@ export default function LobbyPage() {
   return (
     <main
       onClick={needsGesture ? handleUserGesture : undefined}
-      className="min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-[#1C1438] via-[#341F5F] to-[#120D22] text-[#FFF2B1] select-none relative overflow-hidden"
+      className="min-h-dvh w-full flex flex-col justify-between bg-gradient-to-b from-[#1C1438] via-[#341F5F] to-[#120D22] text-[#FFF2B1] select-none relative overflow-hidden"
     >
       {/* Hidden Audio Player for Orchéllia's Voice Greeting */}
       <audio
@@ -139,7 +140,7 @@ export default function LobbyPage() {
         {/* Hero Character Visual (Prominently Center-Staged) */}
         <AnimatePresence>
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0 }}
             animate={{
               opacity: isTransitioning ? 0 : 1,
               scale: isTransitioning ? 1.05 : 1,
@@ -147,12 +148,7 @@ export default function LobbyPage() {
             transition={{ duration: 0.5, ease: 'easeInOut' }}
             className="relative flex flex-col items-center justify-center my-1 sm:my-2"
           >
-            {/* Reactive Voice Glow Ring */}
-            {isVoicePlaying && (
-              <div className="absolute inset-0 rounded-full bg-pink-500/20 blur-3xl animate-pulse pointer-events-none scale-125" />
-            )}
-
-            {/* Floating Orchéllia Subject (Dynamic video model from Orchéllia AI Opening) */}
+            {/* Floating Orchéllia Subject (Transparent animated character by herself) */}
             <motion.div
               animate={{
                 y: isVoicePlaying ? [0, -6, 0] : [0, -10, 0],
@@ -160,28 +156,14 @@ export default function LobbyPage() {
               transition={{
                 y: { repeat: Infinity, duration: 4, ease: 'easeInOut' },
               }}
-              className="relative w-[280px] sm:w-[380px] md:w-[460px] aspect-square flex items-center justify-center transform-gpu"
+              className="relative w-[280px] sm:w-[380px] md:w-[460px] aspect-square flex items-center justify-center"
             >
-              <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-[#582E8B]/35 via-[#BB9AEF]/20 to-transparent blur-2xl pointer-events-none transform-gpu" />
-              <div
-                className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center pointer-events-none z-10"
-                style={{
-                  maskImage: 'radial-gradient(circle at center, black 58%, transparent 92%)',
-                  WebkitMaskImage: 'radial-gradient(circle at center, black 58%, transparent 92%)',
-                }}
-              >
-                <video
-                  src="/videos/orchellia-opening.mp4"
-                  poster="/brand/orchellia-transparent.png"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  aria-label="Orchéllia Orchid Companion"
-                  className="w-full h-full object-cover mix-blend-screen pointer-events-none scale-110"
-                />
-              </div>
+              <TransparentOrchelliaVideo
+                src="/videos/orchellia-opening.mp4"
+                ariaLabel="Orchéllia Orchid Companion"
+                maxDimension={460}
+                className="w-full h-full object-contain pointer-events-none"
+              />
             </motion.div>
           </motion.div>
         </AnimatePresence>

@@ -24,41 +24,41 @@ function InteractiveStudioLights() {
         cursor.y * 2.5,
         0.1
       );
-      pointLightRef.current.intensity = cursor.isHovering ? 1.8 : 0.8;
+      pointLightRef.current.intensity = cursor.isHovering ? 0.85 : 0.4;
     }
   });
 
   return (
     <>
-      {/* Ambient Fill */}
-      <ambientLight intensity={0.55} />
+      {/* Ambient Fill (Calibrated for cream/ivory open-weave textiles) */}
+      <ambientLight intensity={0.48} />
 
-      {/* Key Warm Directional Light (Optimized: Specular & Rim lighting without costly shadow map passes) */}
+      {/* Key Warm Directional Light */}
       <directionalLight
         position={[3.5, 4.5, 3.8]}
-        intensity={1.5}
+        intensity={1.05}
         color="#FFF9ED"
       />
 
       {/* Cool Fill Light */}
       <directionalLight
         position={[-3.5, -2.0, 2.5]}
-        intensity={0.65}
+        intensity={0.42}
         color="#D6E3F0"
       />
 
-      {/* Backlight / Grazing Rim Light for Silk Specular Sheen */}
+      {/* Backlight / Grazing Rim Light for Woven Fringe & Fold Relief */}
       <directionalLight
         position={[0, -3.5, -3.0]}
-        intensity={1.2}
+        intensity={0.68}
         color="#FFFFFF"
       />
 
       {/* Reactive Specular Cursor Spotlight */}
       <pointLight
         ref={pointLightRef}
-        position={[0, 0, 2.2]}
-        intensity={0.8}
+        position={[0, 0, 2.4]}
+        intensity={0.4}
         color={activeScarf.palette.sheen}
         distance={6}
         decay={2}
@@ -72,7 +72,7 @@ function CameraRig() {
 
   useFrame((state) => {
     const is3DZoomed = zoomState.isZoomed && zoomState.target === '3d_scarf';
-    const targetZ = is3DZoomed ? 4.6 / (zoomState.level || 1.8) : 4.6;
+    const targetZ = is3DZoomed ? 5.5 / (zoomState.level || 1.8) : 5.5;
     const targetFov = is3DZoomed ? 28 : 42;
 
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.08);
@@ -145,7 +145,7 @@ export function ScarfScene() {
       className="relative w-full h-full min-h-[480px] md:min-h-[620px] cursor-grab active:cursor-grabbing select-none touch-none"
     >
       <Canvas
-        camera={{ position: [0, 0, 4.6], fov: 42, near: 0.1, far: 30 }}
+        camera={{ position: [0, 0, 5.5], fov: 42, near: 0.1, far: 30 }}
         dpr={[1, 1.5]}
         frameloop={shouldRender ? 'always' : 'never'}
         gl={{
@@ -153,7 +153,7 @@ export function ScarfScene() {
           alpha: true,
           powerPreference: 'high-performance',
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.05,
+          toneMappingExposure: 0.94,
         }}
       >
         <InteractiveStudioLights />

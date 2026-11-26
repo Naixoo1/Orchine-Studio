@@ -5,7 +5,7 @@ import React from 'react';
 
 function ScarfCanvasLoading() {
   return (
-    <div className="w-full h-full min-h-[480px] md:min-h-[620px] flex flex-col items-center justify-center bg-brand-noir/40 backdrop-blur-sm rounded-2xl border border-white/5">
+    <div className="w-full h-full flex flex-col items-center justify-center bg-brand-noir/40 backdrop-blur-sm rounded-2xl border border-white/5">
       <div className="relative w-12 h-12 flex items-center justify-center">
         <div className="absolute inset-0 rounded-full border border-botanical-marigold/30 animate-ping" />
         <div className="w-8 h-8 rounded-full border border-botanical-marigold border-t-transparent animate-spin" />

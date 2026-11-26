@@ -54,7 +54,7 @@ export function FeatureQuickNav() {
                 alt="3D Store Icon"
                 width={28}
                 height={28}
-                className="object-contain w-full h-full group-hover:scale-110 transition-transform drop-shadow"
+                className="block object-contain w-full h-full group-hover:scale-110 transition-transform drop-shadow"
               />
             </div>
             <span className="font-semibold text-xs tracking-wide">
@@ -130,7 +130,7 @@ export function FeatureQuickNav() {
             <span className="font-medium text-xs tracking-wide">
               Atelier Bag
             </span>
-            <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-tighter mt-0.5">
+            <span className="text-[10px] font-mono tabular-nums text-neutral-400 uppercase tracking-tighter mt-0.5 min-w-[8ch] text-center">
               {totalItems > 0 ? `${totalItems} items` : 'View Cart'}
             </span>
             {totalItems > 0 && (
@@ -148,7 +148,7 @@ export function FeatureQuickNav() {
                 alt="3D Signature Card"
                 width={20}
                 height={20}
-                className="object-contain"
+                className="block object-contain"
               />
             </div>
             <div>
@@ -156,7 +156,7 @@ export function FeatureQuickNav() {
                 <span className="font-serif text-sm text-white font-medium">
                   3D Limited Signature Card
                 </span>
-                <span className="text-[10px] font-mono text-neutral-400">
+                <span className="text-[10px] font-mono tabular-nums text-neutral-400 min-w-[5.5ch] inline-block">
                   {activePassportData?.batchNumber || '#0000'}
                 </span>
               </div>

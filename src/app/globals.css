@@ -18,11 +18,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: auto; /* Managed by Lenis */
+    scrollbar-gutter: stable;
   }
 
   body {
     overflow-x: hidden;
     background-color: var(--bg-primary);
+    font-size-adjust: from-font;
   }
 
   ::selection {

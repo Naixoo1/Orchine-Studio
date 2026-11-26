@@ -142,11 +142,15 @@ export function OrchelliaSection() {
               ref={videoRef}
               key={activeVideo}
               src={activeVideo === 'opening' ? '/videos/orchellia-opening.mp4' : '/videos/orchellia-tutorial.mp4'}
+              poster="/brand/orchellia-transparent.png"
+              width={1280}
+              height={720}
+              preload="none"
               playsInline
               loop
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
-              className="w-full h-full object-cover"
+              className="block w-full h-full object-cover"
             />
 
             {/* Video Play/Pause Overlay Overlay */}

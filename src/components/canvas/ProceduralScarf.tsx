@@ -20,17 +20,44 @@ export function ProceduralScarf() {
   const activeScarf = useStudioStore((state) => state.activeScarf);
   const viewPreset = useStudioStore((state) => state.viewPreset);
 
-  // 1. Procedural High-Tessellation PlaneGeometry (40x40 segments = ~1,680 vertices, optimized for ultra-smooth 60-120fps)
+  // 1. Single Base Rectangular Shawl Mesh (2.1 x 3.4 matching real fringed scarf proportions)
   const geometry = useMemo(() => {
-    return new THREE.PlaneGeometry(3.2, 3.2, 40, 40);
+    return new THREE.PlaneGeometry(2.1, 3.4, 48, 72);
   }, []);
 
-  // 2. Procedural Botanical Texture (Updates reactively on activeScarf change)
-  const texture = useMemo(() => {
+  // 2. Synchronous Ivory Woven Fallback Texture (Instant paint while WebP loads)
+  const fallbackTexture = useMemo(() => {
     return createProceduralBotanicalTexture(activeScarf);
   }, [activeScarf]);
 
-  // 3. Shader Uniforms Reference for GPU Wave Deformation
+  // 3. Shared Open-Weave Normal Map & Tassel Fringe Alpha Map (Created once per mount)
+  const sharedMaps = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+
+    const normalMap = loader.load('/textures/weave-normal.webp', (tex) => {
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(12, 18);
+      tex.needsUpdate = true;
+    });
+    normalMap.wrapS = THREE.RepeatWrapping;
+    normalMap.wrapT = THREE.RepeatWrapping;
+    normalMap.repeat.set(12, 18);
+
+    const alphaMap = loader.load('/textures/scarf-alpha.webp', (tex) => {
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+    });
+    alphaMap.wrapS = THREE.ClampToEdgeWrapping;
+    alphaMap.wrapT = THREE.ClampToEdgeWrapping;
+
+    return { normalMap, alphaMap };
+  }, []);
+
+  // 4. Shader Uniforms Reference for GPU Wave & Drape Deformation
   const uniformsRef = useRef<ShaderUniforms>({
     uTime: { value: 0 },
     uFrequency: { value: activeScarf.wavePhysics.baseFrequency },
@@ -40,17 +67,22 @@ export function ProceduralScarf() {
     uCursorIntensity: { value: 0 },
   });
 
-  // Keep wave parameters synced with the active scarf's physics specification
+  // Sync wave parameters with active scarf physics specification
   useEffect(() => {
     uniformsRef.current.uFrequency.value = activeScarf.wavePhysics.baseFrequency;
     uniformsRef.current.uSpeed.value = activeScarf.wavePhysics.baseSpeed;
     uniformsRef.current.uAmplitude.value = activeScarf.wavePhysics.amplitude;
   }, [activeScarf]);
 
-  // 4. MeshPhysicalMaterial with Silk Organza / Habotai Optical Properties (Single Forward Pass)
+  // 5. MeshPhysicalMaterial with Open-Weave Cotton-Silk Optics & Tassel Alpha Cutout
   const material = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
-      map: texture,
+      map: fallbackTexture,
+      normalMap: sharedMaps.normalMap,
+      normalScale: new THREE.Vector2(0.32, 0.32),
+      alphaMap: sharedMaps.alphaMap,
+      alphaTest: 0.38,
+      transparent: false,
       side: THREE.DoubleSide,
       roughness: activeScarf.materialProps.roughness,
       metalness: activeScarf.materialProps.metalness,
@@ -59,11 +91,9 @@ export function ProceduralScarf() {
       sheenColor: new THREE.Color(activeScarf.materialProps.sheenColor),
       clearcoat: activeScarf.materialProps.clearcoat,
       clearcoatRoughness: activeScarf.materialProps.clearcoatRoughness,
-      transparent: true,
-      opacity: 0.98,
     });
 
-    // GPU Vertex Wave Deformation & Normal Shimmer Injection
+    // GPU Vertex Drape Pleats, Wind Waves, & Cursor Ripple Injection
     mat.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = uniformsRef.current.uTime;
       shader.uniforms.uFrequency = uniformsRef.current.uFrequency;
@@ -72,7 +102,6 @@ export function ProceduralScarf() {
       shader.uniforms.uCursor = uniformsRef.current.uCursor;
       shader.uniforms.uCursorIntensity = uniformsRef.current.uCursorIntensity;
 
-      // Inject Uniform Declarations into Vertex Shader
       shader.vertexShader = `
         uniform float uTime;
         uniform float uFrequency;
@@ -83,37 +112,74 @@ export function ProceduralScarf() {
         ${shader.vertexShader}
       `;
 
-      // Inject Compound Wave & Cursor Ripple Math before vertex calculation
       shader.vertexShader = shader.vertexShader.replace(
         '#include <begin_vertex>',
         `
         #include <begin_vertex>
 
-        // Primary compound breeze wave
-        float wave1 = sin(position.x * uFrequency + uTime * uSpeed) * cos(position.y * (uFrequency * 0.9) + uTime * (uSpeed * 0.85));
-        float wave2 = sin((position.x + position.y) * (uFrequency * 1.4) + uTime * 1.1) * 0.3;
-        
-        // Touch & cursor localized ripple
-        float distToCursor = distance(position.xy, uCursor * 1.6);
-        float ripple = sin(distToCursor * 10.0 - uTime * 7.0) * exp(-distToCursor * 2.2) * uCursorIntensity * 0.4;
+        // Natural hanging vertical shawl pleats that deepen toward the fringed hem
+        float drapeFactor = smoothstep(1.7, -1.7, position.y);
+        float pleat = sin(position.x * 5.2 + sin(position.y * 1.1) * 0.55) * 0.085 * drapeFactor;
+        float hangArch = -pow(abs(position.x) * 0.48, 2.0) * 0.14;
 
-        // Total cloth displacement
-        float totalDisplacement = (wave1 + wave2) * uAmplitude + ripple;
+        // Primary compound breeze wave (stronger toward free lower half)
+        float flutterWeight = 0.45 + 0.55 * drapeFactor;
+        float wave1 = sin(position.x * uFrequency + uTime * uSpeed) * cos(position.y * (uFrequency * 0.85) + uTime * (uSpeed * 0.85));
+        float wave2 = sin((position.x + position.y) * (uFrequency * 1.35) + uTime * 1.05) * 0.28;
+
+        // Touch & cursor localized ripple
+        float distToCursor = distance(position.xy, vec2(uCursor.x * 1.05, uCursor.y * 1.7));
+        float ripple = sin(distToCursor * 9.5 - uTime * 7.0) * exp(-distToCursor * 2.1) * uCursorIntensity * 0.36;
+
+        float totalDisplacement = (wave1 + wave2) * (uAmplitude * 0.72) * flutterWeight + ripple + pleat + hangArch;
         transformed.z += totalDisplacement;
 
-        // Perturb normal for dynamic silk sheen reflections
-        float dX = cos(position.x * uFrequency + uTime * uSpeed) * uFrequency * uAmplitude;
-        float dY = -sin(position.y * (uFrequency * 0.9) + uTime * (uSpeed * 0.85)) * (uFrequency * 0.9) * uAmplitude;
-        vNormal = normalize(vNormal + vec3(-dX, -dY, 1.0));
+        // Perturb vertex normal for realistic fold & weave shading
+        float dPleatX = cos(position.x * 5.2 + sin(position.y * 1.1) * 0.55) * 5.2 * 0.085 * drapeFactor;
+        float dWaveX = cos(position.x * uFrequency + uTime * uSpeed) * uFrequency * (uAmplitude * 0.72) * flutterWeight;
+        float dWaveY = -sin(position.y * (uFrequency * 0.85) + uTime * (uSpeed * 0.85)) * (uFrequency * 0.85) * (uAmplitude * 0.72) * flutterWeight;
+        vNormal = normalize(vNormal + vec3(-(dPleatX + dWaveX), -dWaveY, 1.0));
         `
       );
     };
 
     mat.needsUpdate = true;
     return mat;
-  }, [texture, activeScarf]);
+  }, [fallbackTexture, sharedMaps, activeScarf]);
 
-  // 5. Strict Independent Three.js Disposal Routines (Decoupled lifecycles)
+  // 6. Async Photo-Derived WebP Color Map Loader with Clean Disposal
+  useEffect(() => {
+    let cancelled = false;
+    let loadedTexture: THREE.Texture | null = null;
+    const loader = new THREE.TextureLoader();
+
+    loader.load(activeScarf.texturePath, (tex) => {
+      if (cancelled) {
+        tex.dispose();
+        return;
+      }
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+
+      loadedTexture = tex;
+      material.map = tex;
+      material.needsUpdate = true;
+    });
+
+    return () => {
+      cancelled = true;
+      if (loadedTexture) {
+        loadedTexture.dispose();
+      }
+    };
+  }, [activeScarf.texturePath, material]);
+
+  // 7. Strict Independent Disposal Routines on Unmount
   useEffect(() => {
     return () => {
       geometry.dispose();
@@ -128,35 +194,35 @@ export function ProceduralScarf() {
 
   useEffect(() => {
     return () => {
-      texture.dispose();
+      fallbackTexture.dispose();
     };
-  }, [texture]);
+  }, [fallbackTexture]);
 
-  // 6. Interactive Animation Loop: GPU Uniform Update & Camera Preset Lerp
-  // Reads cursor from store via getState() to decouple mousemove from React component reconciliation
+  useEffect(() => {
+    return () => {
+      sharedMaps.normalMap.dispose();
+      sharedMaps.alphaMap.dispose();
+    };
+  }, [sharedMaps]);
+
+  // 8. Interactive Animation Loop: GPU Uniform Update & Preset Pose Interpolation
   useFrame((state, delta) => {
     if (!meshRef.current) return;
 
-    // Advance wave clock
     uniformsRef.current.uTime.value += delta;
 
-    // Direct store read avoids triggering component re-renders on high-frequency cursor updates
     const cursor = useStudioStore.getState().cursor;
-    const targetCursorX = cursor.x;
-    const targetCursorY = cursor.y;
-
     uniformsRef.current.uCursor.value.x = THREE.MathUtils.lerp(
       uniformsRef.current.uCursor.value.x,
-      targetCursorX,
+      cursor.x,
       0.08
     );
     uniformsRef.current.uCursor.value.y = THREE.MathUtils.lerp(
       uniformsRef.current.uCursor.value.y,
-      targetCursorY,
+      cursor.y,
       0.08
     );
 
-    // Decay or boost ripple intensity based on hover / interaction
     const targetIntensity = cursor.isHovering ? Math.max(0.4, cursor.intensity) : 0.0;
     uniformsRef.current.uCursorIntensity.value = THREE.MathUtils.lerp(
       uniformsRef.current.uCursorIntensity.value,
@@ -164,25 +230,38 @@ export function ProceduralScarf() {
       0.06
     );
 
-    // Subtle breathing floating rotation
     const t = state.clock.getElapsedTime();
     if (viewPreset === 'full_spin') {
-      meshRef.current.rotation.y += delta * 0.4;
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, Math.sin(t * 0.5) * 0.08, 0.05);
-      meshRef.current.position.set(0, 0, 0);
-    } else if (viewPreset === 'drape_detail') {
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -0.25, 0.05);
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, 0.35, 0.05);
-      meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, -0.05, 0.05);
-      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, -0.3, 0.05);
-      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, 0.2, 0.05);
-      meshRef.current.position.z = THREE.MathUtils.lerp(meshRef.current.position.z, 0.6, 0.05);
-    } else {
-      // Default 'front' floating perspective
-      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, Math.sin(t * 0.7) * 0.04, 0.05);
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, Math.cos(t * 0.5) * 0.05, 0.05);
+      meshRef.current.rotation.y += delta * 0.45;
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, Math.sin(t * 0.5) * 0.06, 0.05);
       meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, 0, 0.05);
-      meshRef.current.position.set(0, Math.sin(t * 0.9) * 0.05, 0);
+      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, 0, 0.05);
+      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, 0, 0.05);
+      meshRef.current.position.z = THREE.MathUtils.lerp(meshRef.current.position.z, 0, 0.05);
+    } else if (viewPreset === 'drape_detail') {
+      // Focus toward lower fringed hem & weave details
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -0.22, 0.06);
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, 0.36, 0.06);
+      meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, -0.04, 0.06);
+      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, -0.15, 0.06);
+      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, 0.55, 0.06);
+      meshRef.current.position.z = THREE.MathUtils.lerp(meshRef.current.position.z, 1.05, 0.06);
+    } else if (viewPreset === 'top_down') {
+      // Tilted flat-lay angle showcasing full botanical pattern and fringes
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, -0.68, 0.06);
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, 0.08, 0.06);
+      meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, 0, 0.06);
+      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, 0, 0.06);
+      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, 0.05, 0.06);
+      meshRef.current.position.z = THREE.MathUtils.lerp(meshRef.current.position.z, 0.25, 0.06);
+    } else {
+      // Default 'front' hanging drape presentation (lifted slightly above bottom preset bar)
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, Math.sin(t * 0.7) * 0.03, 0.05);
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, Math.cos(t * 0.45) * 0.09, 0.05);
+      meshRef.current.rotation.z = THREE.MathUtils.lerp(meshRef.current.rotation.z, 0, 0.05);
+      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, 0, 0.06);
+      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, 0.16 + Math.sin(t * 0.9) * 0.04, 0.06);
+      meshRef.current.position.z = THREE.MathUtils.lerp(meshRef.current.position.z, 0, 0.06);
     }
   });
 

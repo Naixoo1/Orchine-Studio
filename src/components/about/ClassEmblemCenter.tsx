@@ -48,7 +48,7 @@ export function ClassEmblemCenter({ activeTheme, onHoverTheme }: ClassEmblemCent
               width={120}
               height={120}
               priority
-              className="w-full h-full object-contain drop-shadow-[0_0_24px_rgba(187,154,239,0.45)] transition-transform duration-500 group-hover:scale-110"
+              className="block w-full h-full object-contain drop-shadow-[0_0_24px_rgba(187,154,239,0.45)] transition-transform duration-500 group-hover:scale-110"
             />
           </div>
 

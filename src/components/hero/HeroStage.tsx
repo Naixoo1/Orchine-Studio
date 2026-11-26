@@ -73,16 +73,18 @@ export function HeroStage() {
   };
 
   return (
-    <section className="relative w-full h-[90vh] md:h-screen flex items-center justify-center overflow-hidden bg-[#181232]">
+    <section className="relative w-full h-[90svh] md:h-[100svh] flex items-center justify-center overflow-hidden bg-[#181232]">
       {/* Background Looping Cinematic Video with Continuous Sound */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video
           ref={videoRef}
           src="/videos/hero-loop.mp4"
+          width={1920}
+          height={1080}
           autoPlay
           loop
           playsInline
-          className="w-full h-full object-cover"
+          className="block w-full h-full object-cover"
         />
         {/* Subtle Vignette Gradients for Luxury Atelier Ambiance */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#181232] via-transparent to-[#181232]/70 pointer-events-none" />

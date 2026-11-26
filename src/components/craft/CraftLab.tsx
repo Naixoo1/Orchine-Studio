@@ -12,6 +12,9 @@ export function CraftLab() {
   // 2D Macro Loupe State
   const loupeContainerRef = useRef<HTMLDivElement>(null);
   const [loupePos, setLoupePos] = useState({ x: 50, y: 50, isHovering: false });
+  const [loupeImageIdx, setLoupeImageIdx] = useState(0);
+
+  const loupePhoto = activeScarf.lookbookImages[loupeImageIdx] || activeScarf.photoUrl;
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!loupeContainerRef.current) return;
@@ -45,19 +48,17 @@ export function CraftLab() {
             ref={loupeContainerRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="relative w-full aspect-square max-w-[440px] rounded-xl overflow-hidden bg-[#181818] border border-neutral-800 cursor-crosshair select-none shadow-md"
+            className="relative w-full aspect-[4/5] max-w-[420px] rounded-xl overflow-hidden bg-[#181818] border border-neutral-800 cursor-crosshair select-none shadow-md"
           >
             {/* Scarf Image Base */}
-            <div className="relative w-full h-full p-3 flex items-center justify-center">
-              <Image
-                src={activeScarf.photoUrl}
-                alt={activeScarf.name}
-                width={440}
-                height={440}
-                className="w-full h-full object-cover rounded-lg"
-                priority
-              />
-            </div>
+            <Image
+              src={loupePhoto}
+              alt={`${activeScarf.name} macro view ${loupeImageIdx + 1}`}
+              fill
+              sizes="420px"
+              className="object-cover object-top"
+            />
+            <div className="absolute inset-0 ring-1 ring-inset ring-white/10 pointer-events-none" />
 
             {/* Floating Magnification Loupe Lens */}
             {loupePos.isHovering && (
@@ -79,15 +80,39 @@ export function CraftLab() {
                   }}
                 >
                   <Image
-                    src={activeScarf.photoUrl}
-                    alt={activeScarf.name}
-                    width={440}
-                    height={440}
-                    className="w-full h-full object-cover"
+                    src={loupePhoto}
+                    alt={`${activeScarf.name} magnified`}
+                    fill
+                    sizes="900px"
+                    className="object-cover object-top"
                   />
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Nike-Style Version Selector Strip for Macro Inspection */}
+          <div className="mt-3 flex items-center space-x-2">
+            {activeScarf.lookbookImages.slice(0, 3).map((imgUrl, vIdx) => (
+              <button
+                key={imgUrl}
+                onClick={() => setLoupeImageIdx(vIdx)}
+                className={`relative w-12 h-14 rounded-lg overflow-hidden border transition-all cursor-pointer bg-[#141416] ${
+                  loupeImageIdx === vIdx
+                    ? 'border-white ring-1 ring-white/30'
+                    : 'border-neutral-800 opacity-65 hover:opacity-100 hover:border-neutral-600'
+                }`}
+                aria-label={`Inspect ${activeScarf.name} version ${vIdx + 1}`}
+              >
+                <Image
+                  src={imgUrl}
+                  alt={`${activeScarf.name} version ${vIdx + 1}`}
+                  fill
+                  sizes="60px"
+                  className="object-cover object-top"
+                />
+              </button>
+            ))}
           </div>
         </div>
 
@@ -114,7 +139,7 @@ export function CraftLab() {
                         alt={item.name}
                         width={48}
                         height={48}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </div>
                     <div>

@@ -25,6 +25,12 @@ export function CollectionSpotlight() {
   });
 
   const [addedItem, setAddedItem] = useState<string | null>(null);
+  const [cardImageIdx, setCardImageIdx] = useState<Record<string, number>>({});
+
+  const setCardVersion = (id: string, idx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCardImageIdx((prev) => ({ ...prev, [id]: idx }));
+  };
 
   const toggleCardView = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -134,6 +140,8 @@ export function CollectionSpotlight() {
           const isSelected = scarf.id === activeScarfId;
           const currentView = cardViews[scarf.id] || 'photo';
           const isJustAdded = addedItem === scarf.id;
+          const activeImgIdx = cardImageIdx[scarf.id] ?? 0;
+          const activePhoto = scarf.lookbookImages[activeImgIdx] || scarf.photoUrl;
 
           return (
             <article
@@ -145,23 +153,41 @@ export function CollectionSpotlight() {
                   : 'border-neutral-800 hover:border-neutral-600'
               }`}
             >
-              {/* Product Media Box - Neutral Background, Clean Borders */}
-              <div className="relative w-full aspect-square rounded-lg overflow-hidden mb-3.5 bg-[#101010] border border-neutral-800 flex items-center justify-center">
+              {/* Product Media Box - Nike Neutral Framed Layout */}
+              <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden mb-3.5 bg-[#101010] border border-neutral-800 flex items-center justify-center">
                 {currentView === 'photo' ? (
                   /* Clean Product Photography Mode */
-                  <div className="relative w-full h-full p-2 flex items-center justify-center">
+                  <div className="relative w-full h-full flex items-center justify-center">
                     <Image
-                      src={scarf.photoUrl}
-                      alt={scarf.name}
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-cover rounded-md"
-                      priority
+                      src={activePhoto}
+                      alt={`${scarf.name} view ${activeImgIdx + 1}`}
+                      fill
+                      sizes="320px"
+                      className="object-cover object-top"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15 pointer-events-none" />
                     <div className="absolute top-2.5 left-2.5">
-                      <span className="text-[9px] uppercase font-mono tracking-wider text-neutral-300 bg-black/75 px-2 py-0.5 rounded border border-neutral-700">
+                      <span className="text-[9px] uppercase font-mono tracking-wider text-neutral-200 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded border border-white/15">
                         {scarf.season}
                       </span>
+                    </div>
+
+                    {/* Clean 1 / 2 / 3 Photo Version Switcher */}
+                    <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-10 flex items-center space-x-1 bg-black/65 backdrop-blur-md px-1.5 py-1 rounded-full border border-white/15">
+                      {scarf.lookbookImages.slice(0, 3).map((_, vIdx) => (
+                        <button
+                          key={vIdx}
+                          onClick={(e) => setCardVersion(scarf.id, vIdx, e)}
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono transition-colors cursor-pointer ${
+                            activeImgIdx === vIdx
+                              ? 'bg-white text-black font-semibold'
+                              : 'text-neutral-300 hover:text-white'
+                          }`}
+                          aria-label={`View ${scarf.name} photo ${vIdx + 1}`}
+                        >
+                          0{vIdx + 1}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ) : (

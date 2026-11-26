@@ -7,7 +7,6 @@ import {
   X,
   Volume2,
   VolumeX,
-  ArrowRight,
   Send,
   Loader2,
   Mic,
@@ -21,6 +20,7 @@ import {
   Navigation,
 } from 'lucide-react';
 import { StylingGuideModal } from '@/components/styling/StylingGuideModal';
+import { TransparentOrchelliaVideo } from './TransparentOrchelliaVideo';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -84,15 +84,7 @@ export function OrchelliaPet() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
-  const petVideoRef = useRef<HTMLVideoElement | null>(null);
   const streamIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Ensure animated orchid pet body video loops continuously
-  useEffect(() => {
-    if (petVideoRef.current) {
-      petVideoRef.current.play().catch(() => {});
-    }
-  }, []);
 
   // Zustand Store Selectors & Actions
   const activeScarf = useStudioStore((state) => state.activeScarf);
@@ -773,13 +765,12 @@ export function OrchelliaPet() {
         >
           <button
             onClick={handleSelectPillClick}
-            className="flex items-center space-x-2 px-3.5 py-2 rounded-full glass-panel border border-[#BB9AEF] bg-[#221D63]/95 text-[#FFF2B1] shadow-2xl hover:bg-[#BB9AEF] hover:text-[#221D63] transition-all duration-300 group cursor-pointer"
+            className="flex items-center space-x-2 px-3.5 py-2 rounded-full border border-white/15 bg-[#110D21]/95 backdrop-blur-xl text-[#FAF7F2] shadow-2xl hover:bg-white hover:text-[#110D21] transition-colors duration-200 group cursor-pointer"
           >
-            <span className="w-2 h-2 rounded-full bg-[#BB9AEF] group-hover:bg-[#221D63] animate-ping" />
-            <Leaf className="w-3.5 h-3.5 text-[#BB9AEF] group-hover:text-[#221D63] transition-colors" />
-            <span className="font-serif text-xs tracking-wider">
+            <Leaf className="w-3.5 h-3.5 text-[#BB9AEF] group-hover:text-[#110D21] transition-colors" />
+            <span className="font-sans text-xs">
               Ask Orchéllia about &ldquo;
-              <span className="font-semibold italic max-w-[140px] truncate inline-block align-bottom text-[#FFC8DD] group-hover:text-[#221D63]">
+              <span className="font-medium max-w-[140px] truncate inline-block align-bottom text-[#BB9AEF] group-hover:text-[#110D21]">
                 {selectionPill.text}
               </span>
               &rdquo;
@@ -821,6 +812,7 @@ export function OrchelliaPet() {
           stiffness: 90,
           mass: 0.8,
         }}
+        style={{ contain: 'layout style' }}
         className="orchellia-pet-container fixed bottom-6 right-6 z-40 flex flex-col items-end pointer-events-auto select-none"
       >
         {/* Floating Waypoint Beacon Indicator when hovering across UI */}
@@ -838,23 +830,25 @@ export function OrchelliaPet() {
           </div>
         )}
 
-        {/* Floating Speech Bubble / Dialogue Card */}
+        {/* Refined Atelier Concierge Dialogue Panel */}
         {isChatOpen && (
-          <div className="mb-3 w-[calc(100vw-2rem)] sm:w-[380px] max-h-[75vh] glass-panel p-5 rounded-3xl border border-botanical-marigold/40 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-6 duration-300 relative flex flex-col overflow-hidden backdrop-blur-2xl">
-            {/* Header: Living Character Presence & Active Context */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3 flex-shrink-0">
-              <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-botanical-marigold animate-ping" />
-                <h4 className="font-serif text-sm uppercase tracking-luxury text-brand-ecru leading-none">
+          <div
+            role="dialog"
+            aria-label="Orchéllia Atelier Concierge"
+            className="mb-3 w-[calc(100vw-2rem)] sm:w-[400px] max-h-[72vh] rounded-2xl bg-[#110D21]/95 border border-white/12 shadow-[0_24px_64px_rgba(0,0,0,0.65)] backdrop-blur-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-200 relative flex flex-col overflow-hidden"
+          >
+            {/* Header: Editorial Title + Active Scarf Context + Actions */}
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 flex-shrink-0">
+              <div className="min-w-0">
+                <h4 className="font-serif text-base font-medium tracking-wide text-[#FAF7F2] leading-tight">
                   Orchéllia
                 </h4>
-                <span className="text-[9px] font-mono tracking-widest text-botanical-marigold glass-pill px-1.5 py-0.5 rounded-full uppercase">
-                  {activeScarf.name}
-                </span>
+                <p className="text-[11px] font-sans text-white/50 truncate mt-0.5">
+                  Atelier Concierge · {activeScarf.name}
+                </p>
               </div>
 
-              <div className="flex items-center space-x-2">
-                {/* 3D Weave Zoom Quick Action */}
+              <div className="flex items-center space-x-1 flex-shrink-0">
                 <button
                   onClick={() => {
                     if (zoomState.isZoomed && zoomState.target === '3d_scarf') {
@@ -867,26 +861,28 @@ export function OrchelliaPet() {
                       flyToTarget('canvas', '3D Scarf Weave');
                     }
                   }}
-                  className="p-1 rounded-full text-brand-sand/60 hover:text-botanical-marigold transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white/55 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                   title={zoomState.isZoomed ? 'Zoom Out' : 'Zoom into 3D Weave'}
+                  aria-label={zoomState.isZoomed ? 'Reset 3D Weave Zoom' : 'Zoom into 3D Weave'}
                 >
-                  {zoomState.isZoomed ? <ZoomOut className="w-3.5 h-3.5" /> : <ZoomIn className="w-3.5 h-3.5" />}
+                  {zoomState.isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
                 </button>
 
                 <button
                   onClick={() => setIsChatOpen(false)}
-                  className="p-1 rounded-full text-brand-sand/60 hover:text-brand-ecru transition-colors"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-white/55 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                   aria-label="Close dialogue"
+                  title="Close"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* Scrollable Conversation Stream */}
+            {/* Scrollable Editorial Conversation Feed */}
             <div
               ref={chatScrollRef}
-              className="flex-1 overflow-y-auto space-y-3 pr-1 mb-3 scrollbar-thin scrollbar-thumb-white/10 text-xs"
+              className="flex-1 overflow-y-auto px-5 py-4 space-y-5 scrollbar-thin scrollbar-thumb-white/10"
             >
               {messages.map((msg, idx) => (
                 <div
@@ -895,104 +891,132 @@ export function OrchelliaPet() {
                     msg.role === 'user' ? 'items-end' : 'items-start'
                   } animate-in fade-in duration-200`}
                 >
-                  <div
-                    className={`p-3 rounded-2xl max-w-[90%] leading-relaxed ${
-                      msg.role === 'user'
-                        ? 'bg-botanical-marigold/15 border border-botanical-marigold/30 text-brand-ecru rounded-br-none'
-                        : 'glass-panel border border-white/10 text-brand-sand/90 font-serif italic rounded-bl-none'
-                    }`}
-                  >
-                    {msg.content}
-                    {/* Blinking cursor while assistant is streaming text */}
-                    {msg.role === 'assistant' && isVoicePlaying && idx === messages.length - 1 && (
-                      <span className="inline-block w-1.5 h-3 bg-botanical-marigold ml-1 animate-pulse" />
-                    )}
-                  </div>
-
-                  {msg.role === 'assistant' && msg.content && (
-                    <div className="mt-1 flex items-center space-x-2 px-1">
-                      <button
-                        onClick={() => handlePlayVoiceOnDemand(msg.content)}
-                        disabled={isVoiceLoading}
-                        className="text-[10px] font-mono tracking-widest uppercase text-botanical-marigold/80 hover:text-botanical-marigold flex items-center space-x-1 transition-colors"
-                      >
-                        {isVoiceLoading ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : isVoicePlaying ? (
-                          <VolumeX className="w-3 h-3 text-red-400" />
-                        ) : (
-                          <Volume2 className="w-3 h-3" />
+                  {msg.role === 'assistant' ? (
+                    <div className="w-full max-w-[94%] border-l border-[#BB9AEF]/45 pl-3.5">
+                      <span className="block text-[10px] font-sans font-medium uppercase tracking-[0.16em] text-[#BB9AEF] mb-1">
+                        Orchéllia
+                      </span>
+                      <p className="text-[13px] leading-[1.6] font-sans text-neutral-100 select-text">
+                        {msg.content}
+                        {isVoicePlaying && idx === messages.length - 1 && (
+                          <span className="inline-block w-1.5 h-3 bg-[#BB9AEF] ml-1.5 align-middle animate-pulse" />
                         )}
-                        <span>{isVoicePlaying ? 'Pause Voice' : 'Hear Sol Voice'}</span>
-                      </button>
+                      </p>
+
+                      {msg.content && (
+                        <button
+                          onClick={() => handlePlayVoiceOnDemand(msg.content)}
+                          disabled={isVoiceLoading}
+                          className="mt-2 inline-flex items-center space-x-1.5 text-[11px] font-sans text-white/50 hover:text-[#FFF2B1] transition-colors cursor-pointer disabled:opacity-50"
+                        >
+                          {isVoiceLoading ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : isVoicePlaying ? (
+                            <VolumeX className="w-3 h-3 text-rose-300" />
+                          ) : (
+                            <Volume2 className="w-3 h-3" />
+                          )}
+                          <span>{isVoicePlaying ? 'Pause voice' : 'Play voice'}</span>
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="px-3.5 py-2.5 rounded-2xl max-w-[84%] bg-white/[0.08] border border-white/10 text-[13px] leading-[1.55] font-sans text-white select-text">
+                      {msg.content}
                     </div>
                   )}
                 </div>
               ))}
 
               {isChatLoading && (
-                <div className="flex items-center space-x-2 text-xs text-brand-sand/60 italic py-1.5 animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-botanical-marigold animate-ping" />
-                  <span>Orchéllia is gathering botanical memories...</span>
+                <div className="border-l border-[#BB9AEF]/35 pl-3.5 py-0.5 flex items-center space-x-2 text-xs font-sans text-white/50">
+                  <span className="inline-flex space-x-1" aria-hidden="true">
+                    <span className="w-1 h-1 rounded-full bg-white/50 animate-pulse" />
+                    <span className="w-1 h-1 rounded-full bg-white/50 animate-pulse [animation-delay:150ms]" />
+                    <span className="w-1 h-1 rounded-full bg-white/50 animate-pulse [animation-delay:300ms]" />
+                  </span>
+                  <span>Composing reply…</span>
                 </div>
               )}
             </div>
 
             {/* Setup / Voice Notice */}
             {voiceNotice && (
-              <div className="mb-2 text-[10px] text-botanical-marigold/90 bg-botanical-marigold/10 border border-botanical-marigold/30 rounded-xl px-2.5 py-1.5 flex items-center justify-between">
+              <div className="mx-4 mb-2 text-[11px] font-sans text-[#FFF2B1]/90 bg-white/[0.05] border border-white/12 rounded-xl px-3 py-2 flex items-center justify-between">
                 <span>{voiceNotice}</span>
-                <button onClick={() => setVoiceNotice(null)} className="ml-2 hover:opacity-100 opacity-60">
-                  <X className="w-3 h-3" />
+                <button
+                  onClick={() => setVoiceNotice(null)}
+                  className="ml-2 text-white/50 hover:text-white cursor-pointer"
+                  aria-label="Dismiss notice"
+                >
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
             )}
 
-            {/* Contextual Suggestion Chips */}
-            <div className="space-y-1 mb-3 flex-shrink-0">
-              <span className="text-[9px] font-mono uppercase tracking-widest text-brand-sand/50 block">
-                Explore {activeScarf.name}
+            {/* Curated Horizontal Prompt Strip */}
+            <div className="px-5 py-2.5 border-t border-white/[0.08] flex-shrink-0">
+              <span className="text-[10px] font-sans uppercase tracking-[0.16em] text-white/40 block mb-2">
+                Suggested
               </span>
-              <div className="grid grid-cols-2 gap-1.5">
+              <div
+                className="flex items-center gap-1.5 overflow-x-auto pb-0.5"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
                 {getDynamicContextSuggestions().map((suggestion, i) => (
                   <button
                     key={i}
                     onClick={suggestion.action}
                     disabled={isChatLoading}
-                    className="text-left p-1.5 rounded-xl glass-pill hover:bg-white/10 transition-all flex items-center justify-between group border border-white/5 hover:border-botanical-marigold/40"
+                    className="px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/10 hover:border-white/25 transition-colors text-[11px] font-sans text-white/80 hover:text-white whitespace-nowrap flex-shrink-0 cursor-pointer disabled:opacity-50"
                   >
-                    <span className="font-serif text-[11px] text-brand-ecru group-hover:text-botanical-marigold transition-colors line-clamp-1">
-                      {suggestion.label}
-                    </span>
-                    <ArrowRight className="w-3 h-3 text-botanical-marigold opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all flex-shrink-0 ml-1" />
+                    {suggestion.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Text Input with Send */}
+            {/* Unified Minimalist Composer */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSendMessage(inputText);
               }}
-              className="relative flex items-center flex-shrink-0"
+              className="p-3.5 border-t border-white/10 flex-shrink-0"
             >
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Ask Orchéllia, speak, or select text..."
-                className="w-full glass-panel border border-white/15 focus:border-botanical-marigold/70 rounded-full py-2 pl-4 pr-10 text-xs text-brand-ecru placeholder:text-brand-sand/40 focus:outline-none transition-colors"
-              />
-              <button
-                type="submit"
-                disabled={!inputText.trim() || isChatLoading}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-botanical-marigold text-brand-noir disabled:opacity-40 hover:scale-105 active:scale-95 transition-all"
-                title="Send"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-1.5 bg-white/[0.05] border border-white/12 focus-within:border-white/30 rounded-xl px-2.5 py-1.5 transition-colors">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder="Ask about weaves, dyes, or styling…"
+                  className="flex-1 bg-transparent px-1.5 py-1 text-[13px] font-sans text-white placeholder:text-white/35 focus:outline-none min-w-0"
+                />
+
+                <button
+                  type="button"
+                  onClick={toggleSpeechRecognition}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 cursor-pointer ${
+                    isListening
+                      ? 'bg-rose-500/20 text-rose-300'
+                      : 'text-white/50 hover:text-white hover:bg-white/10'
+                  }`}
+                  title={isListening ? 'Stop listening' : 'Speak to Orchéllia'}
+                  aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+                >
+                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={!inputText.trim() || isChatLoading}
+                  className="w-8 h-8 rounded-lg bg-white text-[#110D21] hover:bg-[#FFF2B1] disabled:bg-white/10 disabled:text-white/25 transition-colors flex items-center justify-center flex-shrink-0 cursor-pointer disabled:cursor-not-allowed"
+                  title="Send message"
+                  aria-label="Send message"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -1017,20 +1041,12 @@ export function OrchelliaPet() {
             </div>
           )}
 
-          {/* Action State Visual: Speaking Soundwave Aura */}
-          {petActionState === 'speaking' && (
-            <>
-              <div className="absolute -inset-3 rounded-full border border-[#BB9AEF]/40 animate-ping pointer-events-none" />
-              <div className="absolute -inset-1 rounded-full bg-[#BB9AEF]/20 blur-md animate-pulse pointer-events-none" />
-            </>
-          )}
-
           {/* Action State Visual: Thinking Orbit */}
           {petActionState === 'thinking' && (
             <div className="absolute -inset-2 rounded-full border border-dashed border-[#BB9AEF]/60 animate-spin-slow pointer-events-none opacity-80" />
           )}
 
-          {/* Orchid Pet Figure with Ethereal Screen Blend & Interactive Tilts */}
+          {/* Orchid Pet Figure (Transparent animated character with zero background/shadow) */}
           <motion.button
             onClick={() => setIsChatOpen(!isChatOpen)}
             animate={{
@@ -1046,64 +1062,41 @@ export function OrchelliaPet() {
             aria-label="Orchéllia Orchid Pet"
             className="relative cursor-pointer focus:outline-none group mb-2"
           >
-            {/* Ambient Botanical Glow Behind Pet (Orchid Violet #BB9AEF) */}
-            <div
-              className={`absolute inset-0 rounded-full transition-all duration-500 ${
-                petActionState === 'delighted'
-                  ? 'bg-[#BB9AEF]/40 blur-xl scale-125'
-                  : petActionState === 'speaking'
-                  ? 'bg-[#BB9AEF]/30 blur-lg scale-115'
-                  : 'bg-[#BB9AEF]/15 blur-lg group-hover:bg-[#BB9AEF]/30'
-              }`}
-            />
-
-            {/* Looping Orchid Character Video masked into living floating avatar (Animated Body) */}
-            <div
-              className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden flex items-center justify-center transition-all transform-gpu will-change-transform pointer-events-none"
-              style={{
-                maskImage: 'radial-gradient(circle at center, black 65%, transparent 95%)',
-                WebkitMaskImage: 'radial-gradient(circle at center, black 65%, transparent 95%)',
-              }}
-            >
-              <video
-                ref={petVideoRef}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center pointer-events-none">
+              <TransparentOrchelliaVideo
                 src="/videos/orchellia-opening.mp4"
-                poster="/brand/orchellia-transparent.png"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className="w-full h-full object-cover mix-blend-screen pointer-events-none scale-125"
+                ariaLabel="Orchéllia Orchid Companion"
+                maxDimension={240}
+                className="w-full h-full object-contain pointer-events-none"
               />
             </div>
           </motion.button>
 
-          {/* 🏷️ Authentic ChatGPT Companion Dock Pill (Matching User Palette) */}
-          <div className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#221D63]/95 border border-[#BB9AEF]/30 shadow-2xl backdrop-blur-xl hover:border-[#BB9AEF]/50 transition-all">
+          {/* Minimalist Atelier Companion Dock */}
+          <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#110D21]/92 border border-white/12 shadow-[0_12px_32px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:border-white/25 transition-colors">
             {/* Text Mode / Compose Prompt Button */}
             <button
               onClick={() => setIsChatOpen(!isChatOpen)}
-              className={`p-1.5 rounded-lg transition-colors flex items-center justify-center ${
+              className={`p-1.5 rounded-full transition-colors flex items-center justify-center cursor-pointer ${
                 isChatOpen
-                  ? 'text-[#BB9AEF] bg-white/10'
+                  ? 'text-[#110D21] bg-white'
                   : 'text-white/70 hover:text-white'
               }`}
-              title="Open Chat / Prompt (Text Mode)"
+              title="Open Chat / Prompt"
               aria-label="Open Chat / Prompt"
             >
-              <SquarePen className="w-4 h-4" />
+              <SquarePen className="w-3.5 h-3.5" />
             </button>
 
             {/* Subtle Vertical Divider */}
-            <div className="h-4 w-px bg-white/15" />
+            <div className="h-3.5 w-px bg-white/12" />
 
             {/* Voice Mode / Live Waveform Button */}
             <button
               onClick={toggleSpeechRecognition}
-              className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${
+              className={`p-1.5 rounded-full transition-colors flex items-center justify-center cursor-pointer ${
                 isListening
-                  ? 'text-red-400 bg-red-500/20'
+                  ? 'text-rose-300 bg-rose-500/20'
                   : isVoicePlaying
                   ? 'text-[#BB9AEF]'
                   : 'text-white/70 hover:text-white'
@@ -1113,37 +1106,37 @@ export function OrchelliaPet() {
                   ? 'Listening... click to send'
                   : isVoicePlaying
                   ? 'Orchéllia Speaking'
-                  : 'Voice Mode (Live Conversation)'
+                  : 'Voice Mode'
               }
               aria-label="Voice Mode"
             >
-              {/* Authentic ChatGPT Equalizer Waveform Bars (Orchid Purple #BB9AEF) */}
-              <div className="flex items-center space-x-[2.5px] h-4 px-0.5">
+              {/* Clean Equalizer Waveform Bars */}
+              <div className="flex items-center space-x-[2px] h-3.5 px-0.5">
                 <span
-                  className={`w-[2.5px] rounded-full transition-all duration-300 ${
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
                     isListening || isVoicePlaying
-                      ? 'bg-[#BB9AEF] animate-pulse h-3'
-                      : 'bg-current h-2'
+                      ? 'bg-[#BB9AEF] animate-pulse h-2.5'
+                      : 'bg-current h-1.5'
                   }`}
                 />
                 <span
-                  className={`w-[2.5px] rounded-full transition-all duration-300 ${
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
                     isListening || isVoicePlaying
-                      ? 'bg-[#BB9AEF] animate-bounce h-4'
-                      : 'bg-current h-4'
+                      ? 'bg-[#BB9AEF] animate-pulse [animation-delay:120ms] h-3.5'
+                      : 'bg-current h-3.5'
                   }`}
                 />
                 <span
-                  className={`w-[2.5px] rounded-full transition-all duration-300 ${
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
                     isListening || isVoicePlaying
-                      ? 'bg-[#BB9AEF] animate-pulse h-3.5'
-                      : 'bg-current h-3'
+                      ? 'bg-[#BB9AEF] animate-pulse [animation-delay:240ms] h-3'
+                      : 'bg-current h-2.5'
                   }`}
                 />
                 <span
-                  className={`w-[2.5px] rounded-full transition-all duration-300 ${
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
                     isListening || isVoicePlaying
-                      ? 'bg-[#BB9AEF] animate-ping h-2.5'
+                      ? 'bg-[#BB9AEF] animate-pulse [animation-delay:360ms] h-2'
                       : 'bg-current h-1.5'
                   }`}
                 />

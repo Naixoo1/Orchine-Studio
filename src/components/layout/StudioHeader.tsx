@@ -24,8 +24,8 @@ export function StudioHeader({
           alt="Orchiné Studio"
           width={420}
           height={195}
-          priority
-          className="object-contain h-full w-auto drop-shadow-sm group-hover:brightness-110 transition-all"
+          loading="eager"
+          className="block object-contain h-full w-auto drop-shadow-sm group-hover:brightness-110 transition-all"
         />
       </div>
     </Link>
@@ -48,8 +48,8 @@ export function StudioHeader({
               alt="Class Logo"
               width={72}
               height={72}
-              priority
-              className="w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0"
+              loading="eager"
+              className="block w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0"
             />
 
             {!centerLogo && brandLogo}
@@ -83,8 +83,8 @@ export function StudioHeader({
                   alt="3D Store Vitrine"
                   width={48}
                   height={48}
-                  priority
-                  className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow"
+                  loading="eager"
+                  className="block object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow"
                 />
                 {/* High-fashion micro 3D badge pill */}
                 <span className="absolute -bottom-0.5 -right-0.5 px-1 py-[0.5px] rounded-[4px] bg-[#BB9AEF] text-[7.5px] font-mono font-bold text-[#140E26] shadow-md leading-none tracking-tight">
@@ -110,9 +110,10 @@ export function StudioHeader({
                 <Image
                   src="/brand/orchid-flower-transparent.png"
                   alt="About Us Orchid"
-                  width={48}
-                  height={48}
-                  className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow"
+                  width={64}
+                  height={57}
+                  loading="eager"
+                  className="block object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow"
                 />
               </div>
             </Link>

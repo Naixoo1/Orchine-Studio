@@ -127,7 +127,7 @@ export function EcoPassportStudio({
 
   return (
     <div
-      className="relative min-h-screen w-full flex flex-col justify-between overflow-hidden select-none text-white bg-gradient-to-b from-[#6978B6] via-[#7A84C4] to-[#5661A2]"
+      className="relative min-h-dvh w-full flex flex-col justify-between overflow-hidden select-none text-white bg-gradient-to-b from-[#6978B6] via-[#7A84C4] to-[#5661A2]"
       onClick={() => openMenu && setOpenMenu(null)}
     >
       {/* Luminous Gallery Center Glow */}
@@ -194,8 +194,8 @@ export function EcoPassportStudio({
       </header>
 
       {/* 2. Expansive Full-Page 3D Card Stage */}
-      <main className="relative z-10 flex-1 w-full flex items-center justify-center min-h-[60vh] px-2 sm:px-6">
-        <div className="w-full h-[68vh] sm:h-[74vh] max-w-6xl">
+      <main className="relative z-10 flex-1 w-full flex items-center justify-center min-h-[60dvh] px-2 sm:px-6">
+        <div className="w-full h-[68dvh] sm:h-[74dvh] max-w-6xl">
           <HolographicCard3D
             ref={card3DRef}
             serialNumber={activeSerial}

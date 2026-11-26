@@ -13,7 +13,7 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-[#242D49] via-[#241A3E] to-[#140E26] select-none overflow-hidden">
+    <main className="relative min-h-dvh w-full flex flex-col justify-between bg-gradient-to-b from-[#242D49] via-[#241A3E] to-[#140E26] select-none overflow-hidden">
       {/* 1. Multi-Accent Botanical Atmosphere (Spec 4.1 & 4.2 Non-Colliding Nike Art Direction) */}
       <div className="absolute inset-0 pointer-events-none -z-0 overflow-hidden">
         {/* Central Blossom Orchid (#FFC8DD) & Lavender (#BB9AEF) Halo */}
@@ -50,7 +50,7 @@ export default function LandingPage() {
             width={80}
             height={80}
             loading="eager"
-            className="w-14 h-14 sm:w-20 sm:h-20 object-contain flex-shrink-0"
+            className="block w-14 h-14 sm:w-20 sm:h-20 object-contain flex-shrink-0"
           />
         </div>
 
@@ -71,7 +71,7 @@ export default function LandingPage() {
                 width={56}
                 height={56}
                 loading="eager"
-                className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
+                className="block object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
               />
               <span className="absolute -bottom-0.5 -right-0.5 px-1 py-[0.5px] rounded-[4px] bg-[#BB9AEF] text-[7.5px] font-mono font-bold text-[#140E26] shadow-md leading-none tracking-tight">
                 3D
@@ -91,10 +91,10 @@ export default function LandingPage() {
               <Image
                 src="/brand/orchid-flower-transparent.png"
                 alt="About Us Orchid"
-                width={56}
-                height={56}
+                width={64}
+                height={57}
                 loading="eager"
-                className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
+                className="block object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
               />
             </div>
           </Link>
@@ -104,7 +104,7 @@ export default function LandingPage() {
       {/* 3. Center Stage: Exact Replica of LandingPage.png with Botanical Depth */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 sm:py-10 max-h-full z-10">
         {/* Large Centered Logo: Orchiné Studio (Padded Uncropped 950x445) */}
-        <div className="relative w-full max-w-[320px] sm:max-w-[500px] md:max-w-[640px] lg:max-w-[740px] aspect-[950/445] max-h-[40vh] flex items-center justify-center mb-8 sm:mb-12 animate-in zoom-in-95 duration-500">
+        <div className="relative w-full max-w-[320px] sm:max-w-[500px] md:max-w-[640px] lg:max-w-[740px] aspect-[950/445] max-h-[40svh] flex items-center justify-center mb-8 sm:mb-12">
           <Image
             src="/brand/orchine-studio-title.png"
             alt="Orchiné Studio"
@@ -112,14 +112,14 @@ export default function LandingPage() {
             priority
             fetchPriority="high"
             sizes="(max-width: 640px) 320px, (max-width: 768px) 500px, (max-width: 1024px) 640px, 740px"
-            className="object-contain drop-shadow-2xl"
+            className="block object-contain drop-shadow-2xl"
           />
         </div>
 
         {/* The Famous "CLICK" Pill Button with Organic Botanical Tactile Feedback */}
         <button
           onClick={handleClickEnter}
-          className="relative px-10 sm:px-14 py-3 sm:py-4 rounded-full bg-white text-[#2B3B68] font-bold text-lg sm:text-2xl tracking-wider shadow-2xl hover:scale-105 active:scale-95 hover:bg-white/95 hover:shadow-white/30 transition-all duration-300 cursor-pointer focus:outline-none animate-in fade-in slide-in-from-bottom-6 duration-700 font-sans group overflow-hidden"
+          className="relative px-10 sm:px-14 py-3 sm:py-4 rounded-full bg-white text-[#2B3B68] font-bold text-lg sm:text-2xl tracking-wider shadow-2xl hover:scale-105 active:scale-95 hover:bg-white/95 hover:shadow-white/30 transition-all duration-300 cursor-pointer focus:outline-none font-sans group overflow-hidden"
         >
           {/* Subtle internal sheen on hover */}
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-pink-400/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />

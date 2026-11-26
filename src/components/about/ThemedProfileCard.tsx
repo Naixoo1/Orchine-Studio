@@ -316,6 +316,7 @@ function PlantationAccessoriesFrame({
 export function ThemedProfileCard({ member, isFocused, onHover }: ThemedProfileCardProps) {
   const theme = BOTANICAL_THEMES[member.themeSlug];
   const [viewMode, setViewMode] = useState<'avatar' | 'specimen'>('avatar');
+  const isPortraitPhoto = !member.image.endsWith('orchid-flower-transparent.png');
 
   // Botanical color spectrum dots
   const dyeSpectrum = {
@@ -389,16 +390,33 @@ export function ThemedProfileCard({ member, isFocused, onHover }: ThemedProfileC
         />
 
         {/* Central Portrait & Specimen Frame */}
-        <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden bg-[#160E2A] border-2 border-white/30 shadow-2xl flex items-center justify-center p-2 z-10">
+        <div
+          className={`relative w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden bg-[#160E2A] border-2 border-white/30 shadow-2xl flex items-center justify-center z-10 ${
+            viewMode === 'avatar' && !isPortraitPhoto ? 'p-2' : ''
+          }`}
+        >
           {viewMode === 'avatar' ? (
-            <Image
-              src={member.image}
-              alt={member.name}
-              fill
-              sizes="(max-width: 640px) 160px, 176px"
-              priority
-              className="object-contain p-4 w-full h-full drop-shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-transform duration-300 group-hover:scale-105"
-            />
+            isPortraitPhoto ? (
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                sizes="(max-width: 640px) 384px, 512px"
+                quality={95}
+                unoptimized
+                priority
+                className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+              />
+            ) : (
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                sizes="(max-width: 640px) 160px, 176px"
+                priority
+                className="object-contain p-4 w-full h-full drop-shadow-[0_0_15px_rgba(236,72,153,0.35)] transition-transform duration-300 group-hover:scale-105"
+              />
+            )
           ) : (
             <div className="relative w-full h-full rounded-full overflow-hidden animate-in fade-in duration-300">
               <Image

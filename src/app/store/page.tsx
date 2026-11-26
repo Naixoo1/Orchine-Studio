@@ -32,6 +32,7 @@ function StoreContent() {
 
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+  const [activeMedia, setActiveMedia] = useState<'3d' | 0 | 1 | 2>('3d');
 
   // Initialize canvas mode and honor ?scarf= query param on mount
   useEffect(() => {
@@ -63,7 +64,7 @@ function StoreContent() {
   ];
 
   return (
-    <main className="relative min-h-screen w-full bg-[#121214] text-white selection:bg-white selection:text-black flex flex-col">
+    <main className="relative min-h-dvh w-full bg-[#121214] text-white selection:bg-white selection:text-black flex flex-col">
       {/* 1. Minimalist Top Studio Bar */}
       <header className="sticky top-0 z-40 w-full bg-[#161618]/90 backdrop-blur-md border-b border-neutral-800 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         {/* Left: Class Logo + Back to Lobby Link */}
@@ -73,8 +74,8 @@ function StoreContent() {
             alt="Class Logo"
             width={64}
             height={64}
-            priority
-            className="w-11 h-11 sm:w-14 sm:h-14 object-contain flex-shrink-0"
+            loading="eager"
+            className="block w-11 h-11 sm:w-14 sm:h-14 object-contain flex-shrink-0"
           />
 
           <Link
@@ -95,7 +96,8 @@ function StoreContent() {
               alt="3D Store Icon"
               width={28}
               height={28}
-              className="object-contain w-full h-full drop-shadow"
+              loading="eager"
+              className="block object-contain w-full h-full drop-shadow"
             />
           </div>
           <span className="font-serif text-lg tracking-wider uppercase text-white font-medium">
@@ -114,50 +116,116 @@ function StoreContent() {
             aria-label="Open Shopping Bag"
           >
             <ShoppingBag className="w-4 h-4 text-neutral-300" />
-            <span className="font-mono font-medium">{totalItems}</span>
+            <span className="font-mono font-medium tabular-nums min-w-[2ch] text-center">{totalItems}</span>
           </button>
         </div>
       </header>
 
       {/* 2. Main 3D Studio & Store Layout (Nike Customizer 2-Column Split) */}
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: 3D Procedural Silk Cloth Canvas & Presets */}
+        {/* Left Column: Nike-Style Product Gallery (3D Canvas + Versions 1, 2, 3) */}
         <div className="lg:col-span-7 flex flex-col items-center">
-          <div className="relative w-full aspect-square max-w-[620px] rounded-2xl bg-[#18181C] border border-neutral-800 overflow-hidden shadow-2xl flex items-center justify-center">
-            {/* Scarf 3D R3F Canvas */}
-            <div className="w-full h-full">
-              <ScarfCanvas />
-            </div>
+          <div className="w-full max-w-[680px] flex flex-col-reverse sm:flex-row gap-3">
+            {/* Vertical / Bottom Thumbnail Rail */}
+            <div className="flex sm:flex-col gap-2 sm:w-16 flex-shrink-0 justify-center sm:justify-start">
+              <button
+                onClick={() => setActiveMedia('3d')}
+                className={`relative w-14 h-16 sm:w-16 sm:h-20 rounded-xl border flex flex-col items-center justify-center transition-colors cursor-pointer bg-[#18181C] ${
+                  activeMedia === '3d'
+                    ? 'border-white text-white ring-1 ring-white/30'
+                    : 'border-neutral-800 text-neutral-400 hover:border-neutral-600 hover:text-white'
+                }`}
+                aria-label="Inspect Interactive 3D Scarf"
+                title="Interactive 3D View"
+              >
+                <Sparkles className="w-4 h-4 mb-1" />
+                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider">3D</span>
+              </button>
 
-            {/* Instruction Overlay Pill */}
-            <div className="absolute top-4 left-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-neutral-700 flex items-center space-x-2 text-[10px] font-mono text-neutral-300 pointer-events-none">
-              <Sparkles className="w-3 h-3 text-white" />
-              <span>GPU Wave Physics & Touch Ripples</span>
-            </div>
-
-            {/* 3D View Presets Toolbar */}
-            <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-center space-x-2 overflow-x-auto p-1.5 rounded-full bg-black/75 backdrop-blur-md border border-neutral-700">
-              {viewPresets.map(({ label, preset }) => {
-                const isActive = viewPreset === preset;
+              {activeScarf.lookbookImages.slice(0, 3).map((imgUrl, idx) => {
+                const versionIdx = idx as 0 | 1 | 2;
+                const isSelected = activeMedia === versionIdx;
                 return (
                   <button
-                    key={preset}
-                    onClick={() => set3DView(preset)}
-                    className={`px-3 py-1 rounded-full text-[11px] font-sans transition-colors whitespace-nowrap ${
-                      isActive
-                        ? 'bg-white text-black font-semibold'
-                        : 'text-neutral-400 hover:text-white'
+                    key={imgUrl}
+                    onClick={() => setActiveMedia(versionIdx)}
+                    className={`relative w-14 h-16 sm:w-16 sm:h-20 rounded-xl overflow-hidden border transition-all cursor-pointer bg-[#141416] ${
+                      isSelected
+                        ? 'border-white ring-1 ring-white/30'
+                        : 'border-neutral-800 opacity-70 hover:opacity-100 hover:border-neutral-600'
                     }`}
+                    aria-label={`${activeScarf.name} photo ${idx + 1}`}
+                    title={`View 0${idx + 1}`}
                   >
-                    {label}
+                    <Image
+                      src={imgUrl}
+                      alt={`${activeScarf.name} version ${idx + 1}`}
+                      fill
+                      sizes="80px"
+                      className="object-cover object-top"
+                    />
                   </button>
                 );
               })}
             </div>
+
+            {/* Main Media Stage */}
+            <div className="relative flex-1 aspect-[4/5] sm:aspect-square rounded-2xl bg-[#18181C] border border-neutral-800 overflow-hidden shadow-2xl flex items-center justify-center">
+              {activeMedia === '3d' ? (
+                <>
+                  <div className="w-full h-full">
+                    <ScarfCanvas />
+                  </div>
+
+                  {/* Instruction Overlay Pill */}
+                  <div className="absolute top-4 left-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-neutral-700 flex items-center space-x-2 text-[10px] font-mono text-neutral-300 pointer-events-none">
+                    <Sparkles className="w-3 h-3 text-white" />
+                    <span>GPU Wave Physics & Touch Ripples</span>
+                  </div>
+
+                  {/* 3D View Presets Toolbar */}
+                  <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-center space-x-2 overflow-x-auto p-1.5 rounded-full bg-black/75 backdrop-blur-md border border-neutral-700">
+                    {viewPresets.map(({ label, preset }) => {
+                      const isActive = viewPreset === preset;
+                      return (
+                        <button
+                          key={preset}
+                          onClick={() => set3DView(preset)}
+                          className={`px-3 py-1 rounded-full text-[11px] font-sans transition-colors whitespace-nowrap ${
+                            isActive
+                              ? 'bg-white text-black font-semibold'
+                              : 'text-neutral-400 hover:text-white'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Image
+                    src={activeScarf.lookbookImages[activeMedia] || activeScarf.photoUrl}
+                    alt={`${activeScarf.name} lookbook view ${activeMedia + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 55vw"
+                    priority
+                    className="object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15 pointer-events-none" />
+                  <div className="absolute bottom-4 left-4 z-10 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 text-[11px] font-mono text-white pointer-events-none">
+                    {activeScarf.name} · 0{activeMedia + 1} / 03
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           <p className="mt-3 text-[11px] font-mono text-neutral-500 text-center">
-            Drag to rotate • Move cursor across silk to generate compound waves
+            {activeMedia === '3d'
+              ? 'Drag to rotate • Move cursor across silk to generate compound waves'
+              : 'Select 3D or gallery thumbnails on the left to inspect drape and finish'}
           </p>
         </div>
 
@@ -220,7 +288,7 @@ function StoreContent() {
                         alt={item.name}
                         width={64}
                         height={64}
-                        className="w-full h-full object-cover"
+                        className="block w-full h-full object-cover object-top"
                       />
                     </div>
                     <span className="text-[11px] font-medium text-white truncate w-full text-center">
@@ -326,7 +394,7 @@ export default function StorePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen w-full bg-[#121214] flex items-center justify-center text-neutral-400 font-mono text-xs">
+        <div className="min-h-dvh w-full bg-[#121214] flex items-center justify-center text-neutral-400 font-mono text-xs">
           Loading 3D Atelier Store...
         </div>
       }

@@ -20,7 +20,7 @@ export default function AboutUsPage() {
   const rightProfiles = [TEAM_MEMBERS[2], TEAM_MEMBERS[3]]; // Fern, Oak
 
   return (
-    <main className="min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-[#181232] via-[#221D63] to-[#120D22] text-[#FFF2B1] select-none relative overflow-x-hidden">
+    <main className="min-h-dvh w-full flex flex-col justify-between bg-gradient-to-b from-[#181232] via-[#221D63] to-[#120D22] text-[#FFF2B1] select-none relative overflow-x-hidden">
       {/* 1. Atelier Top Header (Synchronized across all pages) */}
       <StudioHeader variant="solid" />
 

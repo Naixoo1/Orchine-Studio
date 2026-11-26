@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-brand-noir text-brand-ecru antialiased selection:bg-botanical-marigold selection:text-brand-noir overflow-x-hidden">
+      <body className="min-h-dvh bg-brand-noir text-brand-ecru antialiased selection:bg-botanical-marigold selection:text-brand-noir overflow-x-hidden">
         <SmoothScrollProvider>
           {children}
           <EcoPassportModal />
