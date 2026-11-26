@@ -8,17 +8,8 @@ import { ClassEmblemCenter } from '@/components/about/ClassEmblemCenter';
 import { ThemedProfileCard } from '@/components/about/ThemedProfileCard';
 import { ConstellationVines } from '@/components/about/ConstellationVines';
 import { BotanicalSpecimenGallery } from '@/components/about/BotanicalSpecimenGallery';
-import { TEAM_MEMBERS, BotanicalThemeSlug, BOTANICAL_THEMES } from '@/data/team';
-import {
-  ArrowLeft,
-  Shield,
-  Leaf,
-  Droplets,
-  Sun,
-  Flame,
-  Layers,
-  Compass,
-} from 'lucide-react';
+import { TEAM_MEMBERS, BotanicalThemeSlug } from '@/data/team';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AboutUsPage() {
   const router = useRouter();
@@ -48,22 +39,10 @@ export default function AboutUsPage() {
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span>Return to Atelier</span>
           </button>
-
-          <div className="flex items-center space-x-2.5">
-            <span className="w-2 h-2 rounded-full bg-botanical-marigold animate-ping" />
-            <span className="text-[11px] font-mono tracking-widest text-botanical-marigold uppercase">
-              Cohort 11.2 • YOSUKA Atelier
-            </span>
-          </div>
         </div>
 
         {/* Page Title & Editorial Introduction */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass-panel border border-botanical-marigold/30 text-botanical-marigold text-xs font-mono uppercase tracking-widest mb-4 shadow-lg">
-            <Shield className="w-3.5 h-3.5" />
-            <span>Botanical Artisans & Engineering Collective</span>
-          </div>
-
           <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-white tracking-luxury leading-tight mb-4">
             Imprinted by Nature,
             <br />
@@ -73,68 +52,6 @@ export default function AboutUsPage() {
           <p className="text-xs sm:text-sm md:text-base text-brand-sand/85 font-serif leading-relaxed max-w-2xl mx-auto px-2">
             Meet the four distinctive personas behind Orchiné Studio. Rooted in the living chemistry of botanical eco-print textiles, each artisan commands a natural element — synthesized into procedural WebGL physics and conversational AI.
           </p>
-
-          {/* Interactive Botanical Theme Quick-Selector Filter */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
-            <button
-              onClick={() => setActiveTheme(null)}
-              className={`px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                activeTheme === null
-                  ? 'bg-white/20 border-white text-white shadow-md'
-                  : 'bg-white/5 border-white/10 text-brand-sand/70 hover:text-white'
-              }`}
-            >
-              All 4 Personas
-            </button>
-
-            <button
-              onClick={() => setActiveTheme(activeTheme === 'indigo' ? null : 'indigo')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                activeTheme === 'indigo'
-                  ? 'bg-sky-500/25 border-sky-400 text-sky-200 shadow-[0_0_15px_rgba(56,189,248,0.4)]'
-                  : 'bg-white/5 border-white/10 text-brand-sand/70 hover:text-sky-300'
-              }`}
-            >
-              <Droplets className="w-3 h-3 text-sky-400" />
-              <span>Fermented Indigo</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTheme(activeTheme === 'eucalyptus' ? null : 'eucalyptus')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                activeTheme === 'eucalyptus'
-                  ? 'bg-emerald-500/25 border-emerald-400 text-emerald-200 shadow-[0_0_15px_rgba(52,211,153,0.4)]'
-                  : 'bg-white/5 border-white/10 text-brand-sand/70 hover:text-emerald-300'
-              }`}
-            >
-              <Sun className="w-3 h-3 text-emerald-400" />
-              <span>Silver Dollar Eucalyptus</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTheme(activeTheme === 'fern' ? null : 'fern')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                activeTheme === 'fern'
-                  ? 'bg-teal-500/25 border-teal-400 text-teal-200 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
-                  : 'bg-white/5 border-white/10 text-brand-sand/70 hover:text-teal-300'
-              }`}
-            >
-              <Leaf className="w-3 h-3 text-teal-400" />
-              <span>Sword Fern</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTheme(activeTheme === 'oak' ? null : 'oak')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                activeTheme === 'oak'
-                  ? 'bg-amber-500/25 border-amber-400 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
-                  : 'bg-white/5 border-white/10 text-brand-sand/70 hover:text-amber-300'
-              }`}
-            >
-              <Flame className="w-3 h-3 text-amber-400" />
-              <span>Iron Oak Gall</span>
-            </button>
-          </div>
         </div>
 
         {/* 4. The 2×2 Radial Constellation Surrounding Central Class Logo */}

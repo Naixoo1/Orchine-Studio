@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StudioHeader } from '@/components/layout/StudioHeader';
-import { Volume2, VolumeX, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function LobbyPage() {
   const router = useRouter();
@@ -153,7 +152,7 @@ export default function LobbyPage() {
               <div className="absolute inset-0 rounded-full bg-pink-500/20 blur-3xl animate-pulse pointer-events-none scale-125" />
             )}
 
-            {/* Floating Orchéllia Subject (Hardware-accelerated ambient halo, zero filter lag) */}
+            {/* Floating Orchéllia Subject (Dynamic video model from Orchéllia AI Opening) */}
             <motion.div
               animate={{
                 y: isVoicePlaying ? [0, -6, 0] : [0, -10, 0],
@@ -164,21 +163,31 @@ export default function LobbyPage() {
               className="relative w-[280px] sm:w-[380px] md:w-[460px] aspect-square flex items-center justify-center transform-gpu"
             >
               <div className="absolute inset-8 rounded-full bg-gradient-to-tr from-[#582E8B]/35 via-[#BB9AEF]/20 to-transparent blur-2xl pointer-events-none transform-gpu" />
-              <Image
-                src="/brand/orchellia-transparent.png"
-                alt="Orchéllia Orchid Companion"
-                width={460}
-                height={460}
-                priority
-                className="object-contain max-h-full max-w-full select-none relative z-10"
-              />
+              <div
+                className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center pointer-events-none z-10"
+                style={{
+                  maskImage: 'radial-gradient(circle at center, black 58%, transparent 92%)',
+                  WebkitMaskImage: 'radial-gradient(circle at center, black 58%, transparent 92%)',
+                }}
+              >
+                <video
+                  src="/videos/orchellia-opening.mp4"
+                  poster="/brand/orchellia-transparent.png"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-label="Orchéllia Orchid Companion"
+                  className="w-full h-full object-cover mix-blend-screen pointer-events-none scale-110"
+                />
+              </div>
             </motion.div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Nike-Style Action Cluster: Primary CTA & Audio Equalizer Dock */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4 z-20">
-          
+        {/* Nike-Style Action Cluster: Primary CTA */}
+        <div className="flex items-center justify-center mt-4 z-20">
           {/* Primary Nike Pill Button */}
           <button
             onClick={handleEnterStudio}
@@ -187,53 +196,6 @@ export default function LobbyPage() {
             <span>ENTER ATELIER</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
-
-          {/* Secondary Audio Visualizer Pill */}
-          <div className="px-5 py-3 rounded-full bg-black/40 border border-white/15 backdrop-blur-md flex items-center space-x-3 shadow-lg">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const audio = audioRef.current;
-                if (!audio) return;
-                if (isVoicePlaying) {
-                  audio.pause();
-                  setIsVoicePlaying(false);
-                } else {
-                  audio.currentTime = 0;
-                  audio.play().then(() => setIsVoicePlaying(true)).catch(() => {});
-                }
-              }}
-              className="p-1 rounded-full text-[#BB9AEF] hover:text-[#FFF2B1] transition-colors cursor-pointer"
-              title={isVoicePlaying ? 'Mute Voice' : 'Listen Voice'}
-              aria-label="Toggle Voice"
-            >
-              {isVoicePlaying ? (
-                <Volume2 className="w-4 h-4 text-[#BB9AEF] animate-pulse" />
-              ) : (
-                <VolumeX className="w-4 h-4 text-white/50" />
-              )}
-            </button>
-
-            {/* Nike-Style Equalizer Soundwave in Orchid Purple #BB9AEF */}
-            {isVoicePlaying ? (
-              <div className="flex items-center space-x-1 h-3.5 px-0.5">
-                <span className="w-1 h-full bg-[#BB9AEF] animate-pulse rounded-full" />
-                <span className="w-1 h-2/3 bg-[#FFF2B1] animate-ping rounded-full" />
-                <span className="w-1 h-full bg-[#BB9AEF] animate-pulse rounded-full" />
-                <span className="w-1 h-1/2 bg-[#FFC8DD] animate-bounce rounded-full" />
-              </div>
-            ) : (
-              <span className="text-[11px] font-mono tracking-widest uppercase text-white/60">
-                Voice Ready
-              </span>
-            )}
-
-            {needsGesture && (
-              <span className="text-[10px] font-mono text-[#BB9AEF] animate-pulse">
-                (Tap to Play)
-              </span>
-            )}
-          </div>
         </div>
 
       </div>

@@ -22,8 +22,8 @@ export default function StudioPage() {
       {/* 1. Static Cohort Banner (Class Emblem & Teammate Credits) */}
       <StaticCohortBanner />
 
-      {/* 2. Unified Studio Header (Centered Logo, 3-Line Menu Left, Orchid Right) */}
-      <StudioHeader variant="solid" />
+      {/* 2. Unified Studio Header (Centered Logo, 3D Store & Orchid Right) */}
+      <StudioHeader variant="solid" centerLogo />
 
       {/* 3. Hero Stage: Dual-Mode Cinematic Film ⟷ 3D Canvas (Scroll-Linked Parallax) */}
       <HeroStage />

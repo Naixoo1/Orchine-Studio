@@ -4,18 +4,32 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
-import { useStudioStore } from '@/store/useStudioStore';
-import { SettingsDrawer } from '@/components/settings/SettingsDrawer';
 
 interface StudioHeaderProps {
   variant?: 'solid' | 'transparent';
-  showNavMenu?: boolean;
+  centerLogo?: boolean;
 }
 
-export function StudioHeader({ variant = 'solid', showNavMenu = true }: StudioHeaderProps) {
+export function StudioHeader({
+  variant = 'solid',
+  centerLogo = true,
+}: StudioHeaderProps) {
   const pathname = usePathname();
-  const openSettings = useStudioStore((state) => state.openSettings);
+
+  const brandLogo = (
+    <Link href="/studio" className="flex items-center space-x-2 group focus:outline-none" title="Orchiné Studio • Lobby">
+      <div className="relative h-9 sm:h-11 w-36 sm:w-52 flex items-center justify-center">
+        <Image
+          src="/brand/orchine-header-logo-transparent.png"
+          alt="Orchiné Studio"
+          width={420}
+          height={195}
+          priority
+          className="object-contain h-full w-auto drop-shadow-sm group-hover:brightness-110 transition-all"
+        />
+      </div>
+    </Link>
+  );
 
   return (
     <>
@@ -27,35 +41,29 @@ export function StudioHeader({ variant = 'solid', showNavMenu = true }: StudioHe
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 sm:py-3.5 flex items-center justify-between">
-          {/* Left: Hamburger Menu (if showNavMenu) + Orchiné Studio Brand Logo */}
-          <div className="flex items-center space-x-2.5 sm:space-x-3">
-            {showNavMenu && (
-              <button
-                onClick={openSettings}
-                className="p-1.5 rounded-xl hover:bg-white/10 text-[#FFF2B1]/80 hover:text-white transition-all group focus:outline-none cursor-pointer"
-                aria-label="Open Directory and Settings Menu"
-                title="Directory & Settings"
-              >
-                <Menu className="w-5 h-5 group-hover:scale-105 transition-transform" />
-              </button>
-            )}
+          {/* Left: Class Logo + Brand Logo (unless centered) */}
+          <div className={`flex items-center space-x-2.5 sm:space-x-3 ${centerLogo ? 'flex-1' : ''}`}>
+            <Image
+              src="/brand/class-logo.png"
+              alt="Class Logo"
+              width={72}
+              height={72}
+              priority
+              className="w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0"
+            />
 
-            <Link href="/studio" className="flex items-center space-x-2 group focus:outline-none" title="Orchiné Studio • Lobby">
-              <div className="relative h-9 sm:h-11 w-40 sm:w-52 flex items-center">
-                <Image
-                  src="/brand/orchine-header-logo-transparent.png"
-                  alt="Orchiné Studio"
-                  width={420}
-                  height={195}
-                  priority
-                  className="object-contain h-full w-auto drop-shadow-sm group-hover:brightness-110 transition-all"
-                />
-              </div>
-            </Link>
+            {!centerLogo && brandLogo}
           </div>
 
+          {/* Center: Centered Brand Logo (when centerLogo is enabled) */}
+          {centerLogo && (
+            <div className="flex items-center justify-center shrink-0">
+              {brandLogo}
+            </div>
+          )}
+
           {/* Right: 3D Store Vitrine Icon Feature & Orchid Icon Link for Dedicated About Us Page */}
-          <div className="flex items-center space-x-2.5 sm:space-x-3">
+          <div className={`flex items-center justify-end space-x-2.5 sm:space-x-3 ${centerLogo ? 'flex-1' : ''}`}>
             {/* 3D Store Glass Vitrine Icon Link (Replaces 3D Store text option) */}
             <Link
               href="/store"
@@ -111,9 +119,6 @@ export function StudioHeader({ variant = 'solid', showNavMenu = true }: StudioHe
           </div>
         </div>
       </header>
-
-      {/* Global Settings & Navigation Drawer */}
-      <SettingsDrawer />
     </>
   );
 }

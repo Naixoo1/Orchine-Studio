@@ -4,12 +4,9 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useStudioStore } from '@/store/useStudioStore';
-import { SettingsDrawer } from '@/components/settings/SettingsDrawer';
 
 export default function LandingPage() {
   const router = useRouter();
-  const openSettings = useStudioStore((state) => state.openSettings);
 
   const handleClickEnter = () => {
     router.push('/lobby');
@@ -21,8 +18,7 @@ export default function LandingPage() {
       <div className="absolute inset-0 pointer-events-none -z-0 overflow-hidden">
         {/* Central Blossom Orchid (#FFC8DD) & Lavender (#BB9AEF) Halo */}
         <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full bg-gradient-to-br from-[#FFC8DD]/16 via-[#BB9AEF]/14 to-transparent blur-[140px] animate-pulse"
-          style={{ animationDuration: '8s' }}
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] rounded-full bg-gradient-to-br from-[#FFC8DD]/16 via-[#BB9AEF]/14 to-transparent blur-[140px]"
         />
 
         {/* Bottom-Left: Warm Peach (#FF9E69) & Warm Cream (#FFF2B1) Solar Dye Accent */}
@@ -42,41 +38,21 @@ export default function LandingPage() {
 
         {/* Edge Vignette: Deep contrast perimeter ensuring zero collision with UI controls */}
         <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/45" />
-
-        {/* Floating Spores in the 4 Spec Accents */}
-        <span
-          className="absolute top-[22%] left-[16%] w-1.5 h-1.5 rounded-full bg-[#FFF2B1]/70 shadow-[0_0_8px_#FFF2B1] animate-ping"
-          style={{ animationDuration: '4.5s' }}
-        />
-        <span
-          className="absolute top-[68%] left-[24%] w-2 h-2 rounded-full bg-[#FFC8DD]/70 shadow-[0_0_10px_#FFC8DD] animate-pulse"
-          style={{ animationDuration: '5.5s' }}
-        />
-        <span
-          className="absolute top-[28%] right-[20%] w-1.5 h-1.5 rounded-full bg-[#BB9AEF]/70 shadow-[0_0_8px_#BB9AEF] animate-ping"
-          style={{ animationDuration: '5s' }}
-        />
-        <span
-          className="absolute top-[76%] right-[22%] w-2 h-2 rounded-full bg-[#FF9E69]/70 shadow-[0_0_10px_#FF9E69] animate-pulse"
-          style={{ animationDuration: '6.5s' }}
-        />
       </div>
 
       {/* 2. Top Header Bar (Anchored to reference/LandingPage.png) */}
       <header className="w-full z-20 px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between">
-        {/* Top-Left: 3-line hamburger menu icon matching LandingPage.png */}
-        <button
-          onClick={openSettings}
-          className="p-2 sm:p-2.5 rounded-2xl hover:bg-white/10 transition-all text-white/90 hover:text-white focus:outline-none cursor-pointer group"
-          aria-label="Open Atelier Directory"
-          title="Directory & Settings"
-        >
-          <div className="space-y-1.5 w-6 sm:w-7 flex flex-col justify-center">
-            <span className="block w-full h-[2.5px] bg-white rounded-full group-hover:scale-x-105 transition-transform" />
-            <span className="block w-full h-[2.5px] bg-white rounded-full group-hover:scale-x-105 transition-transform" />
-            <span className="block w-full h-[2.5px] bg-white rounded-full group-hover:scale-x-105 transition-transform" />
-          </div>
-        </button>
+        {/* Top-Left: Class Logo */}
+        <div className="flex items-center">
+          <Image
+            src="/brand/class-logo.png"
+            alt="Class Logo"
+            width={80}
+            height={80}
+            loading="eager"
+            className="w-14 h-14 sm:w-20 sm:h-20 object-contain flex-shrink-0"
+          />
+        </div>
 
         {/* Top-Right: 3D Store Vitrine Icon Feature & Orchid About Us Icon */}
         <div className="flex items-center space-x-2.5 sm:space-x-3">
@@ -94,7 +70,7 @@ export default function LandingPage() {
                 alt="3D Store Vitrine"
                 width={56}
                 height={56}
-                priority
+                loading="eager"
                 className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
               />
               <span className="absolute -bottom-0.5 -right-0.5 px-1 py-[0.5px] rounded-[4px] bg-[#BB9AEF] text-[7.5px] font-mono font-bold text-[#140E26] shadow-md leading-none tracking-tight">
@@ -117,7 +93,7 @@ export default function LandingPage() {
                 alt="About Us Orchid"
                 width={56}
                 height={56}
-                priority
+                loading="eager"
                 className="object-contain w-full h-full transform group-hover:scale-110 transition-transform drop-shadow-md"
               />
             </div>
@@ -134,6 +110,8 @@ export default function LandingPage() {
             alt="Orchiné Studio"
             fill
             priority
+            fetchPriority="high"
+            sizes="(max-width: 640px) 320px, (max-width: 768px) 500px, (max-width: 1024px) 640px, 740px"
             className="object-contain drop-shadow-2xl"
           />
         </div>
@@ -147,19 +125,10 @@ export default function LandingPage() {
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-pink-400/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           <span className="relative z-10">CLICK</span>
         </button>
-
-        {/* Cohort Provenance Micro-Label */}
-        <div className="mt-8 flex items-center space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-white/70">
-          <span className="w-1.5 h-1.5 rounded-full bg-yellow-300 animate-pulse" />
-          <span>Botanical Eco-Print Scarves • Cohort 11.2</span>
-        </div>
       </div>
 
       {/* Subtle Bottom Spacer */}
       <div className="h-6 sm:h-10 w-full" />
-
-      {/* Global Settings & Navigation Drawer */}
-      <SettingsDrawer />
     </main>
   );
 }

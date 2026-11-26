@@ -66,18 +66,29 @@ function StoreContent() {
     <main className="relative min-h-screen w-full bg-[#121214] text-white selection:bg-white selection:text-black flex flex-col">
       {/* 1. Minimalist Top Studio Bar */}
       <header className="sticky top-0 z-40 w-full bg-[#161618]/90 backdrop-blur-md border-b border-neutral-800 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        {/* Back to Lobby Link */}
-        <Link
-          href="/studio"
-          className="inline-flex items-center space-x-2 text-xs font-sans text-neutral-300 hover:text-white transition-colors group"
-        >
-          <ArrowLeft className="w-4 h-4 text-neutral-400 group-hover:-translate-x-1 transition-transform" />
-          <span className="hidden sm:inline">Back to Studio Lobby</span>
-          <span className="sm:hidden">Lobby</span>
-        </Link>
+        {/* Left: Class Logo + Back to Lobby Link */}
+        <div className="flex-1 flex items-center justify-start space-x-3">
+          <Image
+            src="/brand/class-logo.png"
+            alt="Class Logo"
+            width={64}
+            height={64}
+            priority
+            className="w-11 h-11 sm:w-14 sm:h-14 object-contain flex-shrink-0"
+          />
+
+          <Link
+            href="/studio"
+            className="inline-flex items-center space-x-2 text-xs font-sans text-neutral-300 hover:text-white transition-colors group"
+          >
+            <ArrowLeft className="w-4 h-4 text-neutral-400 group-hover:-translate-x-1 transition-transform" />
+            <span className="hidden sm:inline">Back to Studio Lobby</span>
+            <span className="sm:hidden">Lobby</span>
+          </Link>
+        </div>
 
         {/* Center Brand Identity */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center justify-center space-x-2.5 shrink-0">
           <div className="relative w-7 h-7 flex items-center justify-center">
             <Image
               src="/brand/3d-store-icon.png"
@@ -96,7 +107,7 @@ function StoreContent() {
         </div>
 
         {/* Right Actions: Bag */}
-        <div className="flex items-center space-x-3">
+        <div className="flex-1 flex items-center justify-end space-x-3">
           <button
             onClick={openBag}
             className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#202022] hover:bg-[#2A2A2E] text-white border border-neutral-700 transition-colors text-xs"

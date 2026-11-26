@@ -66,21 +66,10 @@ export function BotanicalSpecimenGallery() {
   return (
     <section className="w-full mb-16 relative z-10">
       {/* Visual Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-white/10 pb-4 gap-4">
-        <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-[#BB9AEF] mb-2">
-            <span className="w-2 h-2 rounded-full bg-[#BB9AEF] shadow-[0_0_8px_#BB9AEF]" />
-            <span className="text-[#FFC8DD]">Living Plantation References • Botanical Archive</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-serif text-[#FFF2B1] tracking-tight">
-            The Botanical Source Herbarium
-          </h2>
-        </div>
-        <div className="flex items-center space-x-2 text-[11px] font-mono text-[#FFF2B1]/60">
-          <span>4 Canonical Species</span>
-          <span>•</span>
-          <span className="text-[#BB9AEF]">Eco-Print Contact Media</span>
-        </div>
+      <div className="mb-8 border-b border-white/10 pb-4">
+        <h2 className="text-2xl sm:text-4xl font-serif text-[#FFF2B1] tracking-tight">
+          The Botanical Source Herbarium
+        </h2>
       </div>
 
       {/* 4-Column Visual Herbarium Specimen Grid */}

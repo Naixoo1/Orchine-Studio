@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   RotateCcw,
@@ -139,44 +140,57 @@ export function EcoPassportStudio({
         }}
       />
 
-      {/* 1. Minimal Top Bar: Back + #0000 Badge + Bag */}
+      {/* 1. Minimal Top Bar: Class Logo + Back + #0000 Badge + Bag */}
       <header className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 pt-5 pb-2 flex items-center justify-between">
-        {onClose ? (
-          <button
-            onClick={onClose}
-            className="h-11 w-11 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white transition-colors flex items-center justify-center cursor-pointer"
-            aria-label="Close"
-            title="Close"
-          >
-            <X className="w-4 h-4" aria-hidden="true" />
-          </button>
-        ) : (
-          <Link
-            href="/studio"
-            className="h-11 w-11 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white transition-colors flex items-center justify-center"
-            aria-label="Back to Studio"
-            title="Back to Studio"
-          >
-            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-          </Link>
-        )}
+        <div className="flex-1 flex items-center justify-start space-x-3">
+          <Image
+            src="/brand/class-logo.png"
+            alt="Class Logo"
+            width={64}
+            height={64}
+            priority
+            className="w-12 h-12 sm:w-14 sm:h-14 object-contain flex-shrink-0"
+          />
 
-        <div className="px-4 py-1.5 rounded-full bg-[#241B58]/40 backdrop-blur-md border border-white/25 flex items-center space-x-2 shadow-sm">
+          {onClose ? (
+            <button
+              onClick={onClose}
+              className="h-11 w-11 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white transition-colors flex items-center justify-center cursor-pointer"
+              aria-label="Close"
+              title="Close"
+            >
+              <X className="w-4 h-4" aria-hidden="true" />
+            </button>
+          ) : (
+            <Link
+              href="/studio"
+              className="h-11 w-11 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white transition-colors flex items-center justify-center"
+              aria-label="Back to Studio"
+              title="Back to Studio"
+            >
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+
+        <div className="px-4 py-1.5 rounded-full bg-[#241B58]/40 backdrop-blur-md border border-white/25 flex items-center space-x-2 shadow-sm shrink-0">
           <span className="w-2 h-2 rounded-full bg-emerald-300" aria-hidden="true" />
           <span className="font-mono text-xs font-semibold tracking-wider text-white">
             {activeSerial}
           </span>
         </div>
 
-        <button
-          onClick={openBag}
-          className="h-11 px-3.5 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white text-xs font-mono transition-colors flex items-center space-x-1.5 cursor-pointer"
-          aria-label="Open Bag"
-          title="Bag"
-        >
-          <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-          <span>{totalBagItems}</span>
-        </button>
+        <div className="flex-1 flex items-center justify-end">
+          <button
+            onClick={openBag}
+            className="h-11 px-3.5 rounded-full bg-[#241B58]/35 hover:bg-[#241B58]/55 backdrop-blur-md border border-white/25 text-white text-xs font-mono transition-colors flex items-center space-x-1.5 cursor-pointer"
+            aria-label="Open Bag"
+            title="Bag"
+          >
+            <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+            <span>{totalBagItems}</span>
+          </button>
+        </div>
       </header>
 
       {/* 2. Expansive Full-Page 3D Card Stage */}
